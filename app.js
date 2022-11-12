@@ -2,16 +2,16 @@ const express = require("express");
 const morgan = require("morgan");
 const mongoose = require("mongoose");
 const Blog = require("./models/blog");
+const dbURL = require("./assests");
 
 // express app
 const app = express();
 
 // connect to mongodb & listen for requests
-const dbURL =
-  "mongodb+srv://nonso:blogs@cluster0.joozu.mongodb.net/nonso?retryWrites=true&w=majority";
+const url = dbURL;
 
 mongoose
-  .connect(dbURL, { useNewUrlParser: true, useUnifiedTopology: true })
+  .connect(url, { useNewUrlParser: true, useUnifiedTopology: true })
   .then((result) =>
     app.listen(3000, () => console.log("connected to port 3000"))
   )
