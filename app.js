@@ -1,8 +1,8 @@
 const express = require("express");
 const morgan = require("morgan");
 const mongoose = require("mongoose");
-const Blog = require("./models/blog");
 const dbURL = require("./assests");
+const blogRoutes = require("./routes/blogRoutes");
 
 // express app
 const app = express();
@@ -22,6 +22,7 @@ app.set("view engine", "ejs");
 
 // middleware & static files
 app.use(express.static("public"));
+app.use(express.urlencoded({ extended: true }));
 app.use(morgan("dev"));
 app.use((req, res, next) => {
   res.locals.path = req.path;
@@ -57,7 +58,7 @@ app.get("/all-blogs", (req, res) => {
 });
 
 app.get("/single-blog", (req, res) => {
-  Blog.findById("5ea99b49b8531f40c0fde689")
+  Blog.findById("636ee9888efa4c2c516644ff")
     .then((result) => {
       res.send(result);
     })
@@ -75,20 +76,7 @@ app.get("/about", (req, res) => {
 });
 
 // blog routes
-app.get("/blogs/create", (req, res) => {
-  res.render("create", { title: "Create a new blog" });
-});
-
-app.get("/blogs", (req, res) => {
-  Blog.find()
-    .sort({ createdAt: -1 })
-    .then((result) => {
-      res.render("index", { blogs: result, title: "All blogs" });
-    })
-    .catch((err) => {
-      console.log(err);
-    });
-});
+app.use("/blogs", blogRoutes);
 
 // 404 page
 app.use((req, res) => {
